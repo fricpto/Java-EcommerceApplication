@@ -1,0 +1,20 @@
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "fullName": "Admin User",
+  "role": "ADMIN"
+}
+
+### Register a new user
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "password1234",
+  "fullName": "Test User1",
+  "role": "USER"
+}
