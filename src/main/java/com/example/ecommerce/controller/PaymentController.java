@@ -1,15 +1,22 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.SimulatePaymentRequest;
 import com.example.ecommerce.model.Order;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.PaymentService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import com.example.ecommerce.dto.PaymentResponse;
+import com.example.ecommerce.repository.WalletRepository;
 
 @RestController
 @RequestMapping("/api/user/payments")
@@ -23,6 +30,8 @@ public class PaymentController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WalletRepository walletRepository;
 
     // Process payment for an order
     @PostMapping("/pay/{orderId}")
@@ -59,4 +68,25 @@ public class PaymentController {
         String status = paymentService.getPaymentStatus(order);
         return ResponseEntity.ok("Payment status for order " + orderId + ": " + status);
     }
+
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
+    @PostMapping("/simulate")
+    public ResponseEntity<PaymentResponse> simulate(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid SimulatePaymentRequest req) {
+
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // assume WalletRepository has findByUser(User user) or user.getWallet()
+        var wallet = walletRepository.findByUser(user)
+                .orElseThrow(() -> new IllegalArgumentException("Wallet not found for user"));
+
+        PaymentResponse resp = paymentService.simulatePayment(req, wallet.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
+    }
+
 }
