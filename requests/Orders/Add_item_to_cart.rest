@@ -1,0 +1,14 @@
+# POST http://localhost:8080/api/user/cart/add
+# Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc3ODY5NTk3NiwiZXhwIjoxNzc4NzMxOTc2fQ.0OxOWBv51IriTMhRKp-9MYHhWgq87xS7vs5IFVGcWlvG4Y9Mk5Wk0_NhySPhTUCLo_Sr3G7d7p41i1ZjsbcWbzB5jyOSss00NKUvzdA1tC--8xLv-eRG-zLgK3lVjNGt8obI8z75Ub64mrmnQ9y5hualBBRmMWLB6TfA5BDg-XtKstktxsAvNrLCRZzl4MmFe6QFGdXppT43QN7vfrkohRmxqb54GORk1jG3GKaH2KdMqEcFa8Jwc8ao4P0R77ZSLmYYhYy3--2qT7Dq8EVEWdwml-cWTIUVklxPw_5z8vYp5yFHvMplce_NjVqGJgQt527GkJZE3OZ04rdTjzcNNg
+# Content-Type: application/x-www-form-urlencoded
+
+# itemId=1&quantity=1
+
+POST http://localhost:8080/api/user/cart/add
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "itemId": 1,
+  "quantity": 1
+}

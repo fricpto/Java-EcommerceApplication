@@ -1,8 +1,11 @@
 ### Add card to wallet (authenticated)
 POST http://localhost:8080/api/user/cards
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc3ODY5NTk3NiwiZXhwIjoxNzc4NzMxOTc2fQ.0OxOWBv51IriTMhRKp-9MYHhWgq87xS7vs5IFVGcWlvG4Y9Mk5Wk0_NhySPhTUCLo_Sr3G7d7p41i1ZjsbcWbzB5jyOSss00NKUvzdA1tC--8xLv-eRG-zLgK3lVjNGt8obI8z75Ub64mrmnQ9y5hualBBRmMWLB6TfA5BDg-XtKstktxsAvNrLCRZzl4MmFe6QFGdXppT43QN7vfrkohRmxqb54GORk1jG3GKaH2KdMqEcFa8Jwc8ao4P0R77ZSLmYYhYy3--2qT7Dq8EVEWdwml-cWTIUVklxPw_5z8vYp5yFHvMplce_NjVqGJgQt527GkJZE3OZ04rdTjzcNNg
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY4MTUxMTYwLCJleHAiOjE3NjgxODcxNjB9.iToAQB1j5fvqmIcfRfop0sAZbXCAw-qqDiIax7fPYHmNiF7NitCZIyyaDvVAZfitCR8CdwVJD-tIMat-hmVOZzVsaJVibqjx8t8Zezwr6rsH7RGeeMNI26us9DnmXYE5KoQmOeTPvmW4i64iCdvPdPpL5swrYjT8dSP4axO_R-vGBUpTulotUSWh75jVdGO_96SlRt6WobCH615GVefefK3BBmKH3aOXjN3IFPrg20nHQTxXo_UcZjQ7qJy-Zmxa9lOmilL-zruIRJODiI5GzMxjVjlZR1ALAdibi9py7tR0IRV9mTBJQZXg4H8Q0YglrGhtQ8KGe_iK1HVeiDtOlA
 
 {
-  "number": "4242424242424242"
+  "number": "4242424242424242",
+  "expiryMonth": 12,
+  "expiryYear": 2028,
+  "cvv": "911"
 }

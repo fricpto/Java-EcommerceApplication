@@ -1,3 +1,4 @@
-### List orders
-GET http://localhost:8080/api/user/orders
+### List cards in wallet (authenticated)
+GET http://localhost:8080/api/user/cards
+Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzc3MjE4OTgyLCJleHAiOjE3NzcyNTQ5ODJ9.iIzS4syMLBvHq8TmjrMj3x6_TZBcbpMw_guKb6qsFlZurwuDxRbqxMwuJFlZNhN5k1WwAK6pL1uR-4XU4ocNnOfACUYWIronea5y4fW2SkGmqLpeVvwwx-CLvNNo9AAGBnzJaje7dWtlgfi0BzScTrom54Dt1ApCKRlPVpbLXukyW68pOLt5Coqdv9O3s7NoOdFeKzAxJ1BYy426Dx_OO6Pq-PkS9nZaG-_03fftC39ELiO6Glgbg87RyEK_qTkcHixdDZICXw7Pyu3iP9mqjLzBrbHht1f0AzTu0p3flJ2cr93JqK9NoSlf6IhwQHCmAiXah3p6liPJqorh1ZC0FA

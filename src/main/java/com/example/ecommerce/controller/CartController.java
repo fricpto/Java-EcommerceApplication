@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.repository.UserRepository;
+import com.example.ecommerce.dto.AddItemRequest;
 
 @RestController
 @RequestMapping("/api/user/cart")
@@ -31,11 +32,10 @@ public class CartController {
 
         @PostMapping("/add")
         public ResponseEntity<Cart> addItem(@AuthenticationPrincipal UserDetails userDetails,
-                        @RequestParam Long itemId,
-                        @RequestParam int quantity) {
+                        @RequestBody AddItemRequest request) {
                 User user = userRepository.findByEmail(userDetails.getUsername())
                                 .orElseThrow(() -> new RuntimeException("User not found"));
-                return ResponseEntity.ok(cartService.addItemToCart(user, itemId, quantity));
+                return ResponseEntity.ok(cartService.addItemToCart(user, request.getItemId(), request.getQuantity()));
         }
 
         @DeleteMapping("/remove")

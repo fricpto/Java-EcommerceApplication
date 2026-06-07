@@ -1,7 +1,9 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.dto.RegisterRequest;
+import com.example.ecommerce.model.BlacklistedToken;
 import com.example.ecommerce.model.User;
+import com.example.ecommerce.repository.BlacklistedTokenRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.security.JwtUtil;
 import com.example.ecommerce.security.UserDetailsServiceImpl;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,6 +31,9 @@ public class AuthService {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private BlacklistedTokenRepository blacklistRepo;
 
     public User registerUser(RegisterRequest req) {
         if (req.getPassword() == null || req.getPassword().isBlank()) {
@@ -77,7 +83,7 @@ public class AuthService {
         return userRepository.findByEmail(email);
     }
 
-    public void logout(String token) {
+    public void logout(String token, LocalDateTime expiry) {
         if (token == null || token.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing or invalid token");
         }
@@ -85,7 +91,10 @@ public class AuthService {
         // Stateless approach: just acknowledge logout
         // If you want blacklisting, store the token in a blacklist until it expires
         // Example: tokenBlacklistRepository.save(token);
-
+        BlacklistedToken entry = new BlacklistedToken();
+        entry.setToken(token);
+        entry.setExpiry(expiry);
+        blacklistRepo.save(entry);
         // For now, just log it
         System.out.println("Token invalidated (stateless): " + token);
     }

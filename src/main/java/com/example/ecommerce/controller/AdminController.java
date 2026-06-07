@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +110,25 @@ public class AdminController {
     public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
         adminService.cancelOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/items/{itemId}/stock/add")
+    public ResponseEntity<Item> addStock(@PathVariable Long itemId, @RequestParam int amount) {
+        Item item = repo.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        item.setStockQuantity(item.getStockQuantity() + amount);
+        return ResponseEntity.ok(repo.save(item));
+    }
+
+    @PutMapping("/items/{itemId}/stock/remove")
+    public ResponseEntity<Item> removeStock(@PathVariable Long itemId, @RequestParam int amount) {
+        Item item = repo.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        int newStock = item.getStockQuantity() - amount;
+        if (newStock < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot reduce below zero");
+        }
+        item.setStockQuantity(newStock);
+        return ResponseEntity.ok(repo.save(item));
     }
 }

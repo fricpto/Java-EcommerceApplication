@@ -19,6 +19,8 @@ import jakarta.transaction.Transactional;
 
 import com.example.ecommerce.repository.PaymentRecordRepository;
 
+import java.util.Optional;
+
 @Service
 public class PaymentService {
 
@@ -67,12 +69,17 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
 
         // Persist card display info (mask PAN; do NOT store CVV)
-        CreditCard card = new CreditCard();
-        card.setNumber("**** **** **** " + last4); // masked display value
-        card.setLast4(last4);
-        card.setExpiryMonth(req.expiryMonth);
-        card.setExpiryYear(req.expiryYear);
-        card.setWallet(wallet); // wallet is a Wallet instance
+        Optional<CreditCard> existing = creditCardRepository.findByWalletAndLast4(wallet, last4);
+
+        CreditCard card = existing.orElseGet(() -> {
+            CreditCard c = new CreditCard();
+            c.setNumber("**** **** **** " + last4);
+            c.setLast4(last4);
+            c.setExpiryMonth(req.expiryMonth);
+            c.setExpiryYear(req.expiryYear);
+            c.setWallet(wallet);
+            return creditCardRepository.save(c);
+        });
 
         CreditCard savedCard = creditCardRepository.save(card);
 

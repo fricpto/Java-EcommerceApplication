@@ -13,4 +13,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     // Find items with stock available
     List<Item> findByStockQuantityGreaterThan(Integer minStock);
+
+    // Search items by name (case-insensitive)
+    List<Item> findByNameContainingIgnoreCase(String name);
+
 }

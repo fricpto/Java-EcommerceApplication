@@ -2,6 +2,7 @@ package com.example.ecommerce.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -39,7 +40,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // admin only
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // user or admin
                         .requestMatchers("/api/items", "/api/items/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        /* .requestMatchers("/**").permitAll() */
+                        // static and frontend assets (permit)
+                        .requestMatchers("/", "/index.html", "/favicon.ico", "/vite.svg").permitAll()
+                        .requestMatchers("/assets/**", "/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**")
+                        .permitAll()
+                        .requestMatchers("/.well-known/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CORS preflight
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter,
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)

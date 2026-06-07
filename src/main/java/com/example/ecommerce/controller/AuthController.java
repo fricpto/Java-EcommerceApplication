@@ -3,16 +3,23 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.dto.RegisterRequest;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.service.AuthService;
+
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.ecommerce.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private AuthService authService;
@@ -46,9 +53,10 @@ public class AuthController {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
-
+        // Decode expiry from JWT
+        LocalDateTime expiry = jwtUtil.extractExpiry(token);
         // Call service to handle logout (blacklist or just acknowledge)
-        authService.logout(token);
+        authService.logout(token, expiry);
 
         return ResponseEntity.ok(java.util.Map.of("message", "Logged out successfully"));
     }

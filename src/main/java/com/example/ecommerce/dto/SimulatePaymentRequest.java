@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 
 public class SimulatePaymentRequest {
     @NotBlank
+    @Pattern(regexp = "^(?=(?:.*\\d){16}$)[0-9 ]+$", message = "Card number must contain exactly 16 digits")
     public String cardNumber;
     @NotNull
     @Min(1)

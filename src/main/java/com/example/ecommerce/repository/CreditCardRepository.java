@@ -12,4 +12,6 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
     List<CreditCard> findByWallet(Wallet wallet);
 
     List<CreditCard> findByWalletId(Long walletId);
+
+    Optional<CreditCard> findByWalletAndLast4(Wallet wallet, String last4);
 }

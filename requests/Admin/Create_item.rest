@@ -1,16 +1,16 @@
 ### Create item (Admin) - returns 201 Created
 POST http://localhost:8080/api/admin/items
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2ODI3NTU5OSwiZXhwIjoxNzY4MzExNTk5fQ.E8SHdZKQsCGsZrIOv2mLhj0_Dgstq3X90-wwAjQW_3CqNnL3C-dMXrHywoo1kWA8cQEJRYFohuBeiJ-cPsU4JbmZi3KPa5Gb3wjqJwTdozX6EG5j6jCLDPH7DP3lZLDApAjx8OmaXWBGFnhDJFlfyJiKowtOuKQuhSiE__ZrJn7efTQZUocQpUK92Vl6lKiXPLuqK5ElzhCYY_jgvhbkm5SVkOEk8fbDqMw0BRmnbAPLqdk1n9YAmI76hepOCrKtkk685nHp-iNBUEbt6REoC4HvM4rVYFbV6s6gXYxqv8d6XfZK2ms8j76Yxh-Ny1hrrEz2JKy8nh7NtsNQw-xGKw
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc3ODY5MTAwOCwiZXhwIjoxNzc4NzI3MDA4fQ.ag23TfJrpFZ6wQDGEyniw2kKvUQqByetpFDlfCuU9NCk4N1GJVxRq-qisvk7EszHgb-Uj8wNpFZOrxy-njkiMalWLlegJ-ptnMubVEDfZsr1bOb5pBMQABfv9wOVv_jMsGQSqRrItOf52u8LmO7Zgh4FUoxz8tuEAjm5sqpQRO7m4ijc159qOe-y1CpbiG2oXd5N6jGcyeSDe2AUJf72mQRTvX8yzZXSjHKpRJVCo1v1IZiYaFc7BrXYUvBqvoD8kJYcK1I2DP7qt1un86mSgieLMUO2KQixpvFSpS8rkbH4iP_80YGkGImutq737C9rXtsa9lBxbIgyQjGwv_m-Kg
 Content-Type: application/json
 
-     {
-  "id": "8",
-  "name": "Cargo Pants",
-  "price": 64.99,
-  "image": "https://images.unsplash.com/photo-1602585198422-d795fa9bfd6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZW5pbSUyMGplYW5zJTIwZmFzaGlvbnxlbnwxfHx8fDE3NjM3OTUzMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-  "category": "bottoms",
-  "stockQuantity": 10,
-  "description": "Utility cargo pants with multiple pockets",
-  "tags": ["new", "sale"],
-  "gender": "men"
-}
+   {
+       "id": "8",
+       "name": "Cargo Pants",
+       "price": 64.99,
+       "image": "https://images.unsplash.com/photo-1602585198422-d795fa9bfd6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZW5pbSUyMGplYW5zJTIwZmFzaGlvbnxlbnwxfHx8fDE3NjM3OTUzMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+       "category": "bottoms",
+        "stockQuantity": 10,
+       "description": "Utility cargo pants with multiple pockets",
+       "tags": ["new", "sale"],
+       "gender": "men"
+     }

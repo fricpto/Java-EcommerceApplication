@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Component
 public class JwtUtil {
@@ -50,6 +56,19 @@ public class JwtUtil {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public LocalDateTime extractExpiry(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(publicKey) // ✅ verify with public key
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getExpiration()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
