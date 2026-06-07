@@ -277,7 +277,7 @@ If running frontend dev server on `http://localhost:5173`, either enable CORS in
 ```
 -	Open the app at `http://localhost:8080/` when serving the built frontend from static. If you run the frontend dev server on `http://localhost:5173`, enable CORS or use a Vite proxy.
 
-#### - 7  Test endpoints  
+#### - 6  Test endpoints  
 Use Postman, VS Code .rest files (in the requests/ folder), or curl with JWT tokens to exercise the APIs.
 
 #### Useful Commands
