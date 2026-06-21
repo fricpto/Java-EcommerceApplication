@@ -6,6 +6,9 @@ import com.example.ecommerce.model.Payment;
 import com.example.ecommerce.model.User;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.OrderService;
+
+import io.micrometer.common.lang.NonNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,11 @@ import com.example.ecommerce.repository.OrderRepository;
 import java.util.List;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping({ "/api/user/orders", "/api/admin/orders" })
+/* @RequestMapping({ "/api/user/orders", "/api/admin/orders" }) */
+@RequestMapping("/api/user/orders")
 public class OrderController {
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     @Autowired
@@ -41,9 +46,16 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<Order>> getOrders(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @NonNull HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // This path only handles /api/user/orders now, so just return the user's orders
         return ResponseEntity.ok(orderService.getOrdersByUser(user));
     }
 

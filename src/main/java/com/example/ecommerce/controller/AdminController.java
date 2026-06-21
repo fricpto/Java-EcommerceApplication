@@ -16,8 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.example.ecommerce.repository.UserRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,9 +30,11 @@ public class AdminController {
     private AdminService adminService;
 
     private final ItemRepository repo;
+    private final UserRepository userRepository;
 
-    public AdminController(ItemRepository repo) {
+    public AdminController(ItemRepository repo, UserRepository userRepository) {
         this.repo = repo;
+        this.userRepository = userRepository;
     }
 
     // @PostMapping("/items")
@@ -69,6 +72,19 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/users/{id}/role")
+    public ResponseEntity<User> changeUserRole(@PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        try {
+            user.setRole(User.Role.valueOf(body.get("role").toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid role");
+        }
+        return ResponseEntity.ok(userRepository.save(user));
+    }
+
     // ITEMS (use DTOs consistently)
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getAllItems() {
@@ -98,7 +114,25 @@ public class AdminController {
     public ResponseEntity<List<Order>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
-        return ResponseEntity.ok(adminService.getAllOrders(page, size));
+
+        List<Order> orders = adminService.getAllOrders(page, size);
+
+        // Break circular references exactly as OrderController.getOrderById() does
+        orders.forEach(o -> {
+            if (o.getUser() != null) {
+                o.getUser().setPasswordHash(null);
+                o.getUser().setCart(null);
+                o.getUser().setOrders(null); // breaks Order→User→Orders→Order cycle
+            }
+            if (o.getItems() != null) {
+                o.getItems().forEach(oi -> oi.setOrder(null)); // breaks OrderItem→Order cycle
+            }
+            if (o.getPayment() != null) {
+                o.getPayment().setOrder(null); // breaks Payment→Order cycle
+            }
+        });
+
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/orders/status/{status}")
