@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -57,30 +58,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = null;
 
         // Extract token from header
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            if (blacklistRepo.existsByToken(jwt)) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token is blacklisted");
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                jwt = authHeader.substring(7);
+                if (blacklistRepo.existsByToken(jwt)) {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token is blacklisted");
+                }
+                username = jwtUtil.extractUsername(jwt);
             }
-            username = jwtUtil.extractUsername(jwt);
-        }
 
-        // Validate token and set authentication
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            logger.debug("Authorization header: {}", authHeader);
-            // after extracting jwt
-            logger.debug("Extracted JWT: {}", jwt);
-            logger.debug("Extracted username: {}", username);
-            logger.debug("Token valid: {}", jwtUtil.validateToken(jwt, userDetails));
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+            // Validate token and set authentication
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                logger.debug("Authorization header: {}", authHeader);
+                // after extracting jwt
+                logger.debug("Extracted JWT: {}", jwt);
+                logger.debug("Extracted username: {}", username);
+                logger.debug("Token valid: {}", jwtUtil.validateToken(jwt, userDetails));
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception ex) {
+            // Log the exact error so you can diagnose which token is failing and why
+            logger.warn("JWT authentication error on path={} — {}: {}",
+                    path, ex.getClass().getSimpleName(), ex.getMessage());
+            // SecurityContext remains empty → Spring Security returns 401
         }
 
         filterChain.doFilter(request, response);

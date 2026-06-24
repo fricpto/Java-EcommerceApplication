@@ -2,9 +2,13 @@ package com.example.ecommerce.model;
 
 import java.util.List;
 
+import org.hibernate.annotations.Fetch;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "items")
@@ -34,6 +38,12 @@ public class Item {
     // in Item.java
     @Column
     private String image; // store external URL or path to static resource
+    private String gender; // optional: e.g., "male", "female"
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    @CollectionTable(name = "item_tags", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "tag")
+    private List<String> tags; // optional list of tags
 
     public String getImage() {
         return image;
@@ -60,12 +70,28 @@ public class Item {
         this.name = name;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public Double getPrice() {

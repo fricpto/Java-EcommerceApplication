@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,10 +34,11 @@ public class SecurityConfig {
             throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/auth/**").permitAll() // ✅ allow register/login
-                        .requestMatchers("/api/user/**").authenticated()
-                        .requestMatchers("/api/products").permitAll()
+                        /* .requestMatchers("/api/user/**").authenticated() */
+                        .requestMatchers("/api/products", "/api/products/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // admin only
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // user or admin
                         .requestMatchers("/api/items", "/api/items/**").permitAll()

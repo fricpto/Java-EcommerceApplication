@@ -1,11 +1,22 @@
 package com.example.ecommerce.repository;
 
 import com.example.ecommerce.model.Item;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
+
+    /*
+     * @Override
+     * 
+     * @EntityGraph(attributePaths = { "tags" })
+     * List<Item> findAll();
+     */ // Override to fetch tags eagerly
+
     // Find items by category
+
     List<Item> findByCategory(String category);
 
     // Find items cheaper than a price

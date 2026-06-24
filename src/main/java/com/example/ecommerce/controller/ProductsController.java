@@ -30,8 +30,8 @@ public class ProductsController {
             dto.image = item.getImage(); // now available on Item
             dto.category = item.getCategory();
             dto.description = item.getDescription();
-            dto.tags = List.of(); // adapt if you store tags
-            dto.gender = "unisex";
+            dto.tags = item.getTags() != null ? item.getTags() : List.of(); // ← real data
+            dto.gender = item.getGender(); // ← real data
             System.out.println("CreateItem DTO: " + dto);
             return dto;
         }).collect(Collectors.toList());

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,9 +56,15 @@ public class WalletService {
      * List cards in the user's wallet.
      */
     public List<CreditCard> listCards(User user) {
-        Wallet wallet = walletRepository.findByUser(user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Wallet not found"));
-        return wallet.getCreditCards();
+        /*
+         * Wallet wallet = walletRepository.findByUser(user)
+         * .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+         * "Wallet not found"));
+         */
+        return walletRepository.findByUser(user).map(Wallet::getCreditCards) // wallet found → return its cards
+                .orElse(Collections.emptyList()); // no wallet yet → return []
+        // Users without a wallet simply see no saved cards in the checkout;
+        // they pay with CREDIT_CARD method which always succeeds in demo mode.
     }
 
     /**

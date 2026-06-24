@@ -30,4 +30,8 @@ public class BlacklistCleanupService {
     public void forceCleanup() {
         blacklistRepo.deleteAll();
     }
+
+    public boolean isBlacklisted(String token) {
+        return blacklistRepo.existsByToken(token);
+    }
 }

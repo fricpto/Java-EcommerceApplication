@@ -98,6 +98,8 @@ public class AdminService {
         item.setStockQuantity(dto.stockQuantity());
         item.setCategory(dto.category());
         item.setImage(dto.image());
+        item.setGender(dto.gender()); // ← was missing
+        item.setTags(dto.tags()); // ← was missing
         return itemRepository.save(item);
     }
 
@@ -110,6 +112,9 @@ public class AdminService {
         item.setPrice(dto.price());
         item.setStockQuantity(dto.stockQuantity());
         item.setCategory(dto.category());
+        item.setImage(dto.image()); // ← was missing
+        item.setGender(dto.gender()); // ← was missing
+        item.setTags(dto.tags()); // ← was missing
         return itemRepository.save(item);
     }
 

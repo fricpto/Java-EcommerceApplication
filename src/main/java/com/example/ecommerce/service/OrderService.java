@@ -202,16 +202,23 @@ public class OrderService {
         } catch (Throwable ignored) {
         }
         // ↓ Add this block here
-        for (OrderItem orderItem : order.getItems()) {
-            Item item = orderItem.getItem();
-            int newStock = item.getStockQuantity() - orderItem.getQuantity();
-            if (newStock < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Not enough stock for item: " + item.getName());
-            }
-            item.setStockQuantity(newStock);
-            itemRepository.save(item);
-        }
+        // Why: placeOrder() already decrements stock when the order is placed.
+        // markOrderAsPaid() runs AFTER placeOrder(), so this second loop
+        // double-decrements
+        // stock on every paid order — stock goes negative after the first real
+        // purchase.
+        /*
+         * for (OrderItem orderItem : order.getItems()) {
+         * Item item = orderItem.getItem();
+         * int newStock = item.getStockQuantity() - orderItem.getQuantity();
+         * if (newStock < 0) {
+         * throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+         * "Not enough stock for item: " + item.getName());
+         * }
+         * item.setStockQuantity(newStock);
+         * itemRepository.save(item);
+         * }
+         */
         return orderRepository.save(order);
     }
 

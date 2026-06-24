@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
@@ -55,6 +56,27 @@ public class Order {
 
     public enum Status {
         PENDING, PAID, CANCELLED
+    }
+
+    /**
+     * Flat JSON field: exposes the customer email without going through the
+     * 
+     * @JsonBackReference-excluded 'user' property.
+     *                             Result in JSON: { "id": 1, ..., "userEmail":
+     *                             "alice@example.com", ... }
+     */
+    @JsonProperty("userEmail")
+    public String getUserEmail() {
+        return user != null ? user.getEmail() : null;
+    }
+
+    /**
+     * Flat JSON field: exposes the customer full name.
+     * Result in JSON: { "id": 1, ..., "userFullName": "Alice Smith", ... }
+     */
+    @JsonProperty("userFullName")
+    public String getUserFullName() {
+        return user != null ? user.getFullName() : null;
     }
 
     // getters and setters
