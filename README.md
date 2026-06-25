@@ -252,7 +252,7 @@ ALTER TABLE blacklisted_tokens AUTO_INCREMENT = 1;
 
 #### - 1 Clone the repo
 ```
-git clone https://github.com/fricpto/ecommerce-backend.git
+git clone https://github.com/fricpto/Java-EcommerceApplication
 cd ecommerce-backend
 ```
 #### - 2 Configure database  
