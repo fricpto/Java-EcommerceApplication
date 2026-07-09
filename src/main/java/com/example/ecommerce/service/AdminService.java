@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,6 +32,9 @@ public class AdminService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // ---------------- USER MANAGEMENT ----------------
 
     public List<User> getAllUsers() {
@@ -43,6 +47,22 @@ public class AdminService {
 
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    public User updateUserCredentials(Long id, String newEmail, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if (newEmail != null && !newEmail.isEmpty()) {
+            if (userRepository.findByEmail(newEmail).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+            }
+            user.setEmail(newEmail);
+        }
+
+        if (newPassword != null && !newPassword.isEmpty()) {
+            user.setPasswordHash(passwordEncoder.encode(newPassword));
+        }
+        return userRepository.save(user);
     }
 
     // ---------------- ITEM MANAGEMENT ----------------

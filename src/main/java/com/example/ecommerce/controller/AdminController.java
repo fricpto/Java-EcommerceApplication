@@ -85,6 +85,21 @@ public class AdminController {
         return ResponseEntity.ok(userRepository.save(user));
     }
 
+    @PutMapping("/users/{id}/credentials")
+    public ResponseEntity<User> updateCredentials(@PathVariable Long id, @RequestBody Map<String, String> body) {
+
+        String newEmail = null;
+        String newPassword = null;
+        if (body.containsKey("email")) {
+            newEmail = body.get("email");
+        }
+        if (body.containsKey("password")) {
+            newPassword = body.get("password");
+        }
+        User updated = adminService.updateUserCredentials(id, newEmail, newPassword);
+        return ResponseEntity.ok(updated);
+    }
+
     // ITEMS (use DTOs consistently)
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getAllItems() {

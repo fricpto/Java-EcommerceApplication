@@ -1,0 +1,8 @@
+PUT http://localhost:8080/api/admin/users/{id}/credentials
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "email": "newemail@example.com",
+  "password": "newpassword123"
+}
